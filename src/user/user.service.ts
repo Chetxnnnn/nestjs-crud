@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { createUserDto } from './dto/create-user.dto';
-import { data } from 'src/data/MOCK_DATA';
+import { data } from '../data/MOCK_DATA';
 
 const users = data;
 @Injectable()
 export class UserService {
   createUser(body: createUserDto) {
-    const exists = users.find((user) => user.email === body.email);
-    if (exists) return { msg: 'user already exists', user: exists };
-    users.push(body);
-    return { msg: 'User created successfully', user: users[users.length - 1] };
+    try {
+      const exists = users.find((user) => user.email === body.email);
+      if (exists) return { msg: 'user already exists', user: exists };
+
+      const newUser = { ...body, id: Date.now() };
+      return { msg: 'User created successfully', user: newUser };
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   updateUser(x: createUserDto) {
@@ -21,7 +26,7 @@ export class UserService {
   }
 
   deleteUser(id: number) {
-    return { msg: 'deleting a user' };
+    return { msg: 'deleting a user', id };
   }
 
   getUserById(id: number) {
