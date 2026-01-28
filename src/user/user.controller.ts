@@ -34,7 +34,7 @@ export class UserController {
   }
 
   @Post('delete')
-  deleteUser(@Body() id: number) {
+  deleteUser(@Body('id', ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
   }
 }
